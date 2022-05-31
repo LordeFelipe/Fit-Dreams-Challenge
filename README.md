@@ -24,9 +24,3 @@ O administrador e o professor têm autorização total de criação, edição e 
 O sistema deve permitir também que exista um sistema de usuários, sendo que os usuários são divididos entre alunos, professores e administradores. O usuário deve ter nome, data de nascimento, email, senha e a sua respectiva role (aluno, professor ou admin).
 
 Um usuário também pode estar matriculado em diversas aulas e uma aula pode ter diversos alunos matriculados.
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
