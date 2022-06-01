@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :category do
-    name { '' }
-    description { 'MyText' }
+    name { 'Categoria 1' }
+    description { 'Descrição braba' }
   end
 end
