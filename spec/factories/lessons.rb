@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :lesson do
-    name { "MyString" }
-    start_time { "2022-06-01 18:37:53" }
-    duration { "2022-06-01 18:37:53" }
-    description { "MyText" }
+    name { Faker::Lorem.unique.word }
+    description { Faker::Lorem.unique.sentence }
+    start_time { Faker::Time.between(from: DateTime.now - 1, to: DateTime.now).duration.to_s(:time) }
+    duration { Faker::Time.between(from: DateTime.now - 1, to: DateTime.now).duration.to_s(:time) }
   end
 end

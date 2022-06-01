@@ -15,7 +15,6 @@ class LessonsController < ApplicationController
   end
 
   def create
-    byebug
     lesson = Lesson.create!(lesson_params)
     render json: lesson, status: :created
   rescue StandardError => e
