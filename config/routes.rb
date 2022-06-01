@@ -1,3 +1,11 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  scope 'category' do
+    get '/', to: 'categories#index'
+    get '/show/:id', to: 'categories#show'
+    post '/create', to: 'categories#create'
+    put '/update/:id', to: 'categories#update'
+    delete '/destroy/:id', to: 'categories#destroy'
+  end
 end
