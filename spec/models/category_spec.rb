@@ -20,8 +20,8 @@ RSpec.describe Category, type: :model do
 
     context 'when the name is not unique' do
       it do
-        create(:category)
-        expect(build(:category)).not_to be_valid
+        create(:category, name: "Unico")
+        expect(build(:category, name: "Unico")).not_to be_valid
       end
     end
 

@@ -6,6 +6,6 @@ Rails.application.routes.draw do
     get '/show/:id', to: 'categories#show'
     post '/create', to: 'categories#create'
     patch '/update/:id', to: 'categories#update'
-    delete '/destroy/:id', to: 'categories#destroy'
+    delete '/delete/:id', to: 'categories#destroy'
   end
 end

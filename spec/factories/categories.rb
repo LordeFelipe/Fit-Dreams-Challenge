@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :category do
-    name { 'Categoria 1' }
-    description { 'Descrição braba' }
+    name { Faker::Lorem.unique.word }
+    description { Faker::Lorem.unique.sentence }
   end
 end
