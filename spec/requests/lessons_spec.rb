@@ -58,7 +58,6 @@ RSpec.describe 'Lessons', type: :request do
         expect(response).to have_http_status(:bad_request)
       end
     end
-
   end
 
   describe 'Create one lesson (POST /lesson/create)' do
@@ -66,7 +65,7 @@ RSpec.describe 'Lessons', type: :request do
       let!(:category) { create(:category) }
 
       let(:lesson_params) do
-        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id}
+        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
       end
 
       before do
@@ -100,40 +99,51 @@ RSpec.describe 'Lessons', type: :request do
 
     context 'when the name is empty' do
       let!(:category) { create(:category) }
+
       it 'returns bad request status' do
-        post '/lesson/create', params: { name: '', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id}
+        post '/lesson/create',
+             params: { name: '', description: 'Teste.', duration: '01:00', start_time: '13:50',
+                       category_id: category.id }
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     context 'when the description is empty' do
       let!(:category) { create(:category) }
+
       it 'returns bad request status' do
-        post '/lesson/create', params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id}
+        post '/lesson/create',
+             params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id }
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     context 'when the duration is empty' do
       let!(:category) { create(:category) }
+
       it 'returns bad request status' do
-        post '/lesson/create', params: { name: 'Nome', description: 'Descrição', duration: '', start_time: '13:50', category_id: category.id}
+        post '/lesson/create',
+             params: { name: 'Nome', description: 'Descrição', duration: '', start_time: '13:50',
+                       category_id: category.id }
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     context 'when the start_time is empty' do
       let!(:category) { create(:category) }
+
       it 'returns bad request status' do
-        post '/lesson/create', params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '', category_id: category.id}
+        post '/lesson/create',
+             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '',
+                       category_id: category.id }
         expect(response).to have_http_status(:bad_request)
       end
     end
 
-    context 'when the start_time is empty' do
-      let!(:category) { create(:category) }
+    context 'when the category is empty' do
       it 'returns bad request status' do
-        post '/lesson/create', params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00', category_id: ""}
+        post '/lesson/create',
+             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00', category_id: '' }
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -145,7 +155,7 @@ RSpec.describe 'Lessons', type: :request do
       let!(:lesson) { create(:lesson) }
 
       let(:lesson_params) do
-        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id}
+        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
       end
 
       before do
