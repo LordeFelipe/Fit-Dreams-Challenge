@@ -8,4 +8,12 @@ Rails.application.routes.draw do
     patch '/update/:id', to: 'categories#update'
     delete '/delete/:id', to: 'categories#destroy'
   end
+
+  scope 'lesson' do
+    get '/', to: 'lessons#index'
+    get '/show/:id', to: 'lessons#show'
+    post '/create', to: 'lessons#create'
+    patch '/update/:id', to: 'lessons#update'
+    delete '/delete/:id', to: 'lessons#destroy'
+  end
 end
