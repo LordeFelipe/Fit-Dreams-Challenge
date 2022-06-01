@@ -7,7 +7,7 @@ class CategoriesController < ApplicationController
   end
 
   def show
-    category = Category.find(params(:id))
+    category = Category.find(category_params[:id])
     render json: category, status: :ok
   rescue StandardError => e
     render json: {
@@ -53,7 +53,8 @@ class CategoriesController < ApplicationController
   def category_params
     params.permit(
       'name',
-      'description'
+      'description',
+      'id'
     )
   end
 end
