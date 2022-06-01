@@ -28,7 +28,8 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    category = Category.update!(category_params)
+    category = Category.find(params[:id])
+    category.update(category_params)
     render json: category, status: :ok
   rescue StandardError => e
     render json: {
