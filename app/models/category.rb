@@ -3,5 +3,5 @@
 class Category < ApplicationRecord
   validates :name, :description, presence: true
   validates :name, uniqueness: true
-  has_many :products, dependent: :destroy
+  has_many :lessons, dependent: :destroy
 end
