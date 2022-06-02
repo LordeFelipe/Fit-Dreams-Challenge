@@ -30,7 +30,7 @@ RSpec.describe 'Users', type: :request do
       end
 
       it 'sets the user role as student' do
-        expect(JSON.parse(response.body)['role']['name']).to eq('student')
+        expect(JSON.parse(response.body)['role']['name']).to eq(role.name)
       end
     end
 
@@ -186,14 +186,12 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'Change the role of a user (POST /change_role)' do
-    let!(:student) { create(:student) }
-    let!(:teacher) { create(:teacher) }
     let!(:admin) { create(:admin) }
-    let!(:student_role) { create(:student_role) }
-    let!(:teacher_role) { create(:teacher_role) }
-    let!(:admin_role) { create(:admin_role) }
 
     context 'when we want to change a user role to teacher and an admin is logged in' do
+      let!(:teacher_role) { create(:teacher_role) }
+      let!(:student) { create(:student) }
+
       before do
         post '/change_role',
              params: { user_id: student.id, role_id: teacher_role.id },
@@ -210,6 +208,9 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when we want to change a user role to admin and an admin is logged in' do
+      let!(:student) { create(:student) }
+      let!(:admin_role) { create(:admin_role) }
+
       before do
         post '/change_role',
              params: { user_id: student.id, role_id: admin_role.id },
@@ -226,6 +227,8 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when we want to change an admin to student and an admin is logged in' do
+      let!(:student_role) { create(:student_role) }
+
       before do
         post '/change_role',
              params: { user_id: admin.id, role_id: student_role.id },
@@ -242,6 +245,8 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when we want to change the role of a user that does not exist' do
+      let!(:teacher_role) { create(:teacher_role) }
+
       before do
         post '/change_role',
              params: { user_id: -1, role_id: teacher_role.id },
@@ -251,9 +256,12 @@ RSpec.describe 'Users', type: :request do
       it 'returns bad request status' do
         expect(response).to have_http_status(:bad_request)
       end
-    end    
+    end
 
     context 'when the admin headers are not sent (admin not logged in)' do
+      let!(:student) { create(:student) }
+      let!(:teacher_role) { create(:admin_role) }
+
       before do
         post '/change_role',
              params: { user_id: student.id, role_id: teacher_role.id }
@@ -265,6 +273,9 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when a student user try to change a role' do
+      let!(:student) { create(:student) }
+      let!(:teacher_role) { create(:admin_role) }
+
       before do
         post '/change_role',
              params: { user_id: student.id, role_id: teacher_role.id },
@@ -277,6 +288,10 @@ RSpec.describe 'Users', type: :request do
     end
 
     context 'when a teacher user try to change a role' do
+      let!(:student) { create(:student) }
+      let!(:teacher) { create(:teacher) }
+      let!(:teacher_role) { create(:admin_role) }
+
       before do
         post '/change_role',
              params: { user_id: student.id, role_id: teacher_role.id },
