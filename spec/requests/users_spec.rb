@@ -184,4 +184,108 @@ RSpec.describe 'Users', type: :request do
       end
     end
   end
+
+  describe 'Change the role of a user (POST /change_role)' do
+    let!(:student) { create(:student) }
+    let!(:teacher) { create(:teacher) }
+    let!(:admin) { create(:admin) }
+    let!(:student_role) { create(:student_role) }
+    let!(:teacher_role) { create(:teacher_role) }
+    let!(:admin_role) { create(:admin_role) }
+
+    context 'when we want to change a user role to teacher and an admin is logged in' do
+      before do
+        post '/change_role',
+             params: { user_id: student.id, role_id: teacher_role.id },
+             headers: { 'X-User-Email': admin.email, 'X-User-Token': admin.authentication_token }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'changes the user role to teacher' do
+        expect(JSON.parse(response.body)['role']['name']).to eq(teacher_role.name)
+      end
+    end
+
+    context 'when we want to change a user role to admin and an admin is logged in' do
+      before do
+        post '/change_role',
+             params: { user_id: student.id, role_id: admin_role.id },
+             headers: { 'X-User-Email': admin.email, 'X-User-Token': admin.authentication_token }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'changes the user role to admin' do
+        expect(JSON.parse(response.body)['role']['name']).to eq(admin_role.name)
+      end
+    end
+
+    context 'when we want to change an admin to student and an admin is logged in' do
+      before do
+        post '/change_role',
+             params: { user_id: admin.id, role_id: student_role.id },
+             headers: { 'X-User-Email': admin.email, 'X-User-Token': admin.authentication_token }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'changes the user role to student' do
+        expect(JSON.parse(response.body)['role']['name']).to eq(student_role.name)
+      end
+    end
+
+    context 'when we want to change the role of a user that does not exist' do
+      before do
+        post '/change_role',
+             params: { user_id: -1, role_id: teacher_role.id },
+             headers: { 'X-User-Email': admin.email, 'X-User-Token': admin.authentication_token }
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+    end    
+
+    context 'when the admin headers are not sent (admin not logged in)' do
+      before do
+        post '/change_role',
+             params: { user_id: student.id, role_id: teacher_role.id }
+      end
+
+      it 'returns forbidden status' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when a student user try to change a role' do
+      before do
+        post '/change_role',
+             params: { user_id: student.id, role_id: teacher_role.id },
+             headers: { 'X-User-Email': student.email, 'X-User-Token': student.authentication_token }
+      end
+
+      it 'returns forbidden status' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when a teacher user try to change a role' do
+      before do
+        post '/change_role',
+             params: { user_id: student.id, role_id: teacher_role.id },
+             headers: { 'X-User-Email': teacher.email, 'X-User-Token': teacher.authentication_token }
+      end
+
+      it 'returns forbidden status' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end
