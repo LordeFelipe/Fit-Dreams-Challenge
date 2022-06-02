@@ -314,9 +314,9 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the user is logged in and try to enroll in a new lesson' do
       before do
-        post '/enroll', 
-        params: {lesson_id: lesson.id},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/enroll',
+             params: { lesson_id: lesson.id },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns ok status' do
@@ -330,9 +330,9 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the lesson does not exist' do
       before do
-        post '/enroll', 
-        params: {lesson_id: -1},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/enroll',
+             params: { lesson_id: -1 },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns bad request status' do
@@ -342,13 +342,13 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the user try to enroll in an already enrolled lesson' do
       before do
-        post '/enroll', 
-        params: {lesson_id: lesson.id},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/enroll',
+             params: { lesson_id: lesson.id },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
 
-        post '/enroll', 
-        params: {lesson_id: lesson.id},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/enroll',
+             params: { lesson_id: lesson.id },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns bad request status' do
@@ -362,8 +362,8 @@ RSpec.describe 'Users', type: :request do
 
     context 'when no header is passed (user not logged in)' do
       before do
-        post '/enroll', 
-        params: {lesson_id: lesson.id}
+        post '/enroll',
+             params: { lesson_id: lesson.id }
       end
 
       it 'returns unauthorized status' do
@@ -377,16 +377,16 @@ RSpec.describe 'Users', type: :request do
     let!(:lesson) { create(:lesson) }
 
     before do
-      post '/enroll', 
-      params: {lesson_id: lesson.id},
-      headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      post '/enroll',
+           params: { lesson_id: lesson.id },
+           headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
     end
 
     context 'when the user is logged in and try to unenroll of an enrolled class' do
       before do
-        post '/unenroll', 
-        params: {lesson_id: lesson.id},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/unenroll',
+             params: { lesson_id: lesson.id },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns ok status' do
@@ -400,9 +400,9 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the lesson does not exist' do
       before do
-        post '/unenroll', 
-        params: {lesson_id: -1},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/unenroll',
+             params: { lesson_id: -1 },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns bad request status' do
@@ -412,10 +412,11 @@ RSpec.describe 'Users', type: :request do
 
     context 'when the user try to unenroll in a not enrolled class' do
       let!(:lesson2) { create(:lesson) }
+
       before do
-        post '/unenroll', 
-        params: {lesson_id: lesson2.id},
-        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+        post '/unenroll',
+             params: { lesson_id: lesson2.id },
+             headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
       end
 
       it 'returns bad request status' do
@@ -425,8 +426,8 @@ RSpec.describe 'Users', type: :request do
 
     context 'when no header is passed (user not logged in)' do
       before do
-        post '/unenroll', 
-        params: {lesson_id: lesson.id}
+        post '/unenroll',
+             params: { lesson_id: lesson.id }
       end
 
       it 'returns unauthorized status' do
