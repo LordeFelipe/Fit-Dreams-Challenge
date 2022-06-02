@@ -8,6 +8,6 @@ FactoryBot.define do
     end
     factory :admin do
       name { 'admin' }
-    end 
+    end
   end
 end

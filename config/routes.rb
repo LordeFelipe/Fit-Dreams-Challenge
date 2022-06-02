@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   devise_for :users, skip: :all
-  
+
   scope 'category' do
     get '/', to: 'categories#index'
     get '/show/:id', to: 'categories#show'
@@ -23,5 +23,4 @@ Rails.application.routes.draw do
   post '/login', to: 'users#login'
   get '/logout', to: 'users#logout'
   post '/change_role', to: 'users#change_role'
-
 end

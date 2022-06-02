@@ -12,4 +12,5 @@ Role.create(name: 'student')
 Role.create(name: 'teacher')
 Role.create(name: 'admin')
 
-User.create(name: 'Ademiro', email: 'admin@mail.com', password: '123456', birthdate: '10/04/1999', role: Role.where(name: 'admin')[0])
+User.create(name: 'Ademiro', email: 'admin@mail.com', password: '123456', birthdate: '10/04/1999',
+            role: Role.where(name: 'admin')[0])
