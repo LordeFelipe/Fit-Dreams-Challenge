@@ -1,6 +1,7 @@
 class LessonSerializer < ActiveModel::Serializer
   attributes :id, :name, :description, :start_time, :duration
   has_one :category
+  has_many :users
 
   def start_time
     object.start_time.to_s(:time)

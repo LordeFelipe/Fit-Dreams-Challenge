@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: %i[logout change_role], fallback_to_devise: false
-  before_action :require_login, only: %i[logout]
+  acts_as_token_authentication_handler_for User, only: %i[logout change_role matriculate], fallback_to_devise: false
+  before_action :require_login, only: %i[logout matriculate]
   before_action :admin_permission, only: %i[change_role]
 
   def signup
@@ -52,6 +52,17 @@ class UsersController < ApplicationController
     }, status: :bad_request
   end
 
+  def matriculate
+    UserLesson.create!(lesson_id: user_params[:lesson_id], user_id: current_user.id)
+    render json: current_user, status: :ok
+  rescue StandardError => e
+    render json:
+    {
+      message: 'Ocorre um problema na matrícula',
+      description: e
+    }, status: :bad_request
+  end
+
   private
 
   def user_params
@@ -62,7 +73,10 @@ class UsersController < ApplicationController
       'name',
       'birthdate',
       'role_id',
-      'user_id'
+      'user_id',
+      'lesson_id',
+      'user_email',
+      'user_token'
     )
   end
 end
