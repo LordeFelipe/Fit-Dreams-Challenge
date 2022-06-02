@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: %i[logout change_role matriculate], fallback_to_devise: false
-  before_action :require_login, only: %i[logout matriculate]
+  acts_as_token_authentication_handler_for User, only: %i[logout change_role enroll unenroll], fallback_to_devise: false
+  before_action :require_login, only: %i[logout enroll unenroll]
   before_action :admin_permission, only: %i[change_role]
 
   def signup
@@ -63,6 +63,32 @@ class UsersController < ApplicationController
     }, status: :bad_request
   end
 
+  def enroll
+    UserLesson.create!(lesson_id: user_params[:lesson_id], user_id: current_user.id)
+    render json: current_user, status: :ok
+  rescue StandardError => e
+    render json:
+    {
+      message: 'Ocorreu um problema na matrícula',
+      description: e
+    }, status: :bad_request
+  end
+
+  def unenroll
+    if current_user.lessons.where(id: user_params[:lesson_id]) != []
+      UserLesson.find_by(user_id: current_user.id, lesson_id: user_params[:lesson_id]).destroy!
+      render json: current_user, status: :ok
+    else
+      render json: { message: 'O usuário não está matriculado nesta turma' }, status: :unprocessable_entity
+    end
+  rescue StandardError => e
+    render json:
+    {
+      message: 'Ocorreu um problema na desmatrícula',
+      description: e
+    }, status: :bad_request
+  end
+
   private
 
   def user_params
@@ -74,9 +100,7 @@ class UsersController < ApplicationController
       'birthdate',
       'role_id',
       'user_id',
-      'lesson_id',
-      'user_email',
-      'user_token'
+      'lesson_id'
     )
   end
 end
