@@ -58,7 +58,7 @@ class UsersController < ApplicationController
   rescue StandardError => e
     render json:
     {
-      message: 'Ocorre um problema na matrícula',
+      message: 'Ocorreu um problema na matrícula',
       description: e
     }, status: :bad_request
   end

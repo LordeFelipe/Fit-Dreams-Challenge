@@ -32,6 +32,10 @@ RSpec.describe 'Users', type: :request do
       it 'sets the user role as student' do
         expect(JSON.parse(response.body)['role']['name']).to eq(role.name)
       end
+
+      it 'creates a user with no lesson enrollments' do
+        expect(JSON.parse(response.body)['lessons']).to be_empty
+      end
     end
 
     context 'when the name is empty' do
@@ -300,6 +304,133 @@ RSpec.describe 'Users', type: :request do
 
       it 'returns forbidden status' do
         expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'Enroll a user in a lesson (POST /enroll)' do
+    let!(:user) { create(:student) }
+    let!(:lesson) { create(:lesson) }
+
+    context 'when the user is logged in and try to enroll in a new lesson' do
+      before do
+        post '/enroll', 
+        params: {lesson_id: lesson.id},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'enrolls the user in the class' do
+        expect(JSON.parse(response.body)['lessons']).not_to be_empty
+      end
+    end
+
+    context 'when the lesson does not exist' do
+      before do
+        post '/enroll', 
+        params: {lesson_id: -1},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    context 'when the user try to enroll in an already enrolled lesson' do
+      before do
+        post '/enroll', 
+        params: {lesson_id: lesson.id},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+
+        post '/enroll', 
+        params: {lesson_id: lesson.id},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'enrolls the user in the leson only one time' do
+        expect(user.lessons.length).to eq(1)
+      end
+    end
+
+    context 'when no header is passed (user not logged in)' do
+      before do
+        post '/enroll', 
+        params: {lesson_id: lesson.id}
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
+  describe 'Unenroll a user in a lesson (POST /unenroll)' do
+    let!(:user) { create(:student) }
+    let!(:lesson) { create(:lesson) }
+
+    before do
+      post '/enroll', 
+      params: {lesson_id: lesson.id},
+      headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+    end
+
+    context 'when the user is logged in and try to unenroll of an enrolled class' do
+      before do
+        post '/unenroll', 
+        params: {lesson_id: lesson.id},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'enrolls the user in the class' do
+        expect(JSON.parse(response.body)['lessons']).to be_empty
+      end
+    end
+
+    context 'when the lesson does not exist' do
+      before do
+        post '/unenroll', 
+        params: {lesson_id: -1},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context 'when the user try to unenroll in a not enrolled class' do
+      let!(:lesson2) { create(:lesson) }
+      before do
+        post '/unenroll', 
+        params: {lesson_id: lesson2.id},
+        headers: { 'X-User-Email': user.email, 'X-User-Token': user.authentication_token }
+      end
+
+      it 'returns bad request status' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context 'when no header is passed (user not logged in)' do
+      before do
+        post '/unenroll', 
+        params: {lesson_id: lesson.id}
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

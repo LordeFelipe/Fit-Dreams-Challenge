@@ -1,5 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserLesson, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context 'when using standard student factory' do
+    it { expect(build(:user_lesson)).to be_valid }
+  end
 end
