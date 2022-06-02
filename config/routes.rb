@@ -21,5 +21,7 @@ Rails.application.routes.draw do
 
   post '/signup', to: 'users#signup'
   post '/login', to: 'users#login'
-  post '/logout', to: 'users#logout'
+  get '/logout', to: 'users#logout'
+  post '/change_role', to: 'users#change_role'
+
 end

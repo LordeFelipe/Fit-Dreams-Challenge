@@ -6,10 +6,10 @@ class ApplicationController < ActionController::API
   end
 
   def admin_or_teacher_permission
-    head(:forbidden) unless current_user.presence && (current_user.role == "admin" || current_user.role == "teacher")
+    head(:forbidden) unless current_user.presence && (current_user.role.name == "admin" || current_user.role.name == "teacher")
   end
 
   def admin_permission
-    head(:forbidden) unless current_user.presence && current_user.role == "admin"
+    head(:forbidden) unless current_user.presence && current_user.role.name == "admin"
   end
 end

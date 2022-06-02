@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
-  acts_as_token_authentication_handler_for User, only: %i[logout], fallback_to_devise: false
-
+  acts_as_token_authentication_handler_for User, only: %i[logout change_role], fallback_to_devise: false
   before_action :require_login, only: %i[logout]
+  before_action :admin_permission, only: %i[change_role]
 
   def signup 
     user = User.create!(user_params)
@@ -38,6 +38,19 @@ class UsersController < ApplicationController
       render json: { message: e.message }, status: :bad_request
   end
 
+  def change_role
+    user = User.find(user_params[:user_id])
+    user.role_id = user_params[:role_id]
+    user.save!
+    render json: user, status: :ok
+    rescue StandardError => e
+      render json:
+      {
+        message: 'Ocorre um problema ao alterar o papel do usuário',
+        description: e
+      }, status: :bad_request
+  end
+
   private
 
   def user_params
@@ -47,7 +60,8 @@ class UsersController < ApplicationController
       'password_confirmation',
       'name',
       'birthdate',
-      'role_id'
+      'role_id',
+      'user_id'
     )
   end
 end
