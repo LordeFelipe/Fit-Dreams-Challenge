@@ -4,7 +4,9 @@ class UsersController < ApplicationController
   before_action :admin_permission, only: %i[change_role]
 
   def signup
-    user = User.create!(user_params)
+    user = User.new(user_params)
+    user.role_id = Role.where(name: 'student')[0].id
+    user.save!
     render json: user, status: :created
   rescue StandardError => e
     render json:

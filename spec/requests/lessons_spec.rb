@@ -61,9 +61,9 @@ RSpec.describe 'Lessons', type: :request do
   end
 
   describe 'Create one lesson (POST /lesson/create)' do
-    context 'when the parameters are valid' do
-      let!(:category) { create(:category) }
+    let!(:category) { create(:category) }
 
+    context 'when the parameters are valid' do
       let(:lesson_params) do
         { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
       end
@@ -98,8 +98,6 @@ RSpec.describe 'Lessons', type: :request do
     end
 
     context 'when the name is empty' do
-      let!(:category) { create(:category) }
-
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: '', description: 'Teste.', duration: '01:00', start_time: '13:50',
@@ -109,8 +107,6 @@ RSpec.describe 'Lessons', type: :request do
     end
 
     context 'when the description is empty' do
-      let!(:category) { create(:category) }
-
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id }
@@ -119,8 +115,6 @@ RSpec.describe 'Lessons', type: :request do
     end
 
     context 'when the duration is empty' do
-      let!(:category) { create(:category) }
-
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '', start_time: '13:50',
@@ -130,8 +124,6 @@ RSpec.describe 'Lessons', type: :request do
     end
 
     context 'when the start_time is empty' do
-      let!(:category) { create(:category) }
-
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '',
