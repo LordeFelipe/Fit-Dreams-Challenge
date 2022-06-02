@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  devise_for :users, skip: :all
+  
   scope 'category' do
     get '/', to: 'categories#index'
     get '/show/:id', to: 'categories#show'
@@ -16,4 +18,8 @@ Rails.application.routes.draw do
     patch '/update/:id', to: 'lessons#update'
     delete '/delete/:id', to: 'lessons#destroy'
   end
+
+  post '/signup', to: 'users#signup'
+  post '/login', to: 'users#login'
+  post '/logout', to: 'users#logout'
 end
