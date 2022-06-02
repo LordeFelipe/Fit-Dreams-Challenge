@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
 
-  acts_as_token_authentication_handler_for User, only: [:logout]
+  acts_as_token_authentication_handler_for User, only: %i[logout], fallback_to_devise: false
+
+  before_action :require_login, only: %i[logout]
 
   def signup 
     user = User.create!(user_params)
@@ -29,7 +31,11 @@ class UsersController < ApplicationController
   end
 
   def logout
-
+    current_user.authentication_token = nil
+    current_user.save!
+    render json: {message: "Usuário deslogado com sucesso."}, status: :ok
+    rescue StandardError => e
+      render json: { message: e.message }, status: :bad_request
   end
 
   private
