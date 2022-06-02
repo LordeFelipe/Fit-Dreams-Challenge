@@ -7,4 +7,6 @@ class User < ApplicationRecord
 
   validates :name, :email, :birthdate, presence: true
   validates :email, uniqueness: true
+
+  belongs_to :role
 end
