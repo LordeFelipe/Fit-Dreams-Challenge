@@ -11,6 +11,7 @@ AllCops:
     - bin/bundle
     - config/environments/development.rb
     - spec/rails_helper.rb
+    - config/initializers/devise.rb
 
 Style/Documentation:
   Enabled: false
