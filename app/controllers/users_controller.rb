@@ -75,11 +75,11 @@ class UsersController < ApplicationController
   end
 
   def unenroll
-    if current_user.lessons.where(id: user_params[:lesson_id]) != []
+    if current_user.lessons.where(id: user_params[:lesson_id]) == []
+      render json: { message: 'O usuário não está matriculado nesta turma' }, status: :unprocessable_entity
+    else
       UserLesson.find_by(user_id: current_user.id, lesson_id: user_params[:lesson_id]).destroy!
       render json: current_user, status: :ok
-    else
-      render json: { message: 'O usuário não está matriculado nesta turma' }, status: :unprocessable_entity
     end
   rescue StandardError => e
     render json:
