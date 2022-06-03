@@ -1,4 +1,7 @@
 class LessonsController < ApplicationController
+  acts_as_token_authentication_handler_for User, only: %i[create update destroy], fallback_to_devise: false
+  before_action :admin_or_teacher_permission, only: %i[create update destroy]
+
   def index
     lessons = Lesson.all
     render json: lessons, status: :ok
