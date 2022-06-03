@@ -9,7 +9,13 @@ Desafio proposto pela empresa Switch Dreams em seu desafio backend.
 - Banco de Dados: PostgreSQL
 - Testes Automatizados: Rspec
 - Linter: Rubocop
-- Modelagem do BD: https://dbdiagram.io/d/629684c854ce26352736a5b9
+- Modelagem do Banco de Dados: https://dbdiagram.io/d/629684c854ce26352736a5b9
+- Link do Deploy no Heroku:
+
+## Observações
+- Para acessar métodos que necessitam de um usuário logado (aluno, professor ou admin), é necessário enviar ho header da requisição o token do usuário (X-User-Token) e o email do usuário (X-User-Email). O token pode ser obtido no método de login. Para mais informações, consulte os testes de requisição do usuário.
+- O método de logout exclui o token do usuário o que força a criação de um novo token quando o usuário loga novamente. Caso a API seja utilizada com algum front, seria equivalente a deslogar de todos os despositivos.
+- Adicionei algumas mudanças no rubocop que achei conveniente como ignorar alguns arquivos de configuração e aumentar 2 linhas o tamanho máximo que um método pode ter. Pessoalmente eu acho 10 pouco demais.
 
 ## Problema
 
