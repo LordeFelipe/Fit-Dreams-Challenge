@@ -56,10 +56,10 @@ Desafio proposto pela empresa Switch Dreams em seu desafio backend.
   - Necessário estar logado
 
 ## Observações
-- Para acessar métodos que necessitam de um usuário logado (aluno, professor ou admin), é necessário enviar ho header da requisição o token do usuário (X-User-Token) e o email do usuário (X-User-Email). O token pode ser obtido no método de login. Para mais informações, consulte os testes de requisição do usuário.
+- Para acessar métodos que necessitam de um usuário logado (aluno, professor ou admin), é necessário enviar no header da requisição o token do usuário (X-User-Token) e o email do usuário (X-User-Email). O token pode ser obtido no método de login. Para mais informações, consulte os testes de requisição do usuário.
 - O método de logout exclui o token do usuário o que força a criação de um novo token quando o usuário loga novamente. Caso a API seja utilizada com algum front, seria equivalente a deslogar de todos os despositivos.
-- Adicionei algumas mudanças no rubocop que achei conveniente como ignorar alguns arquivos de configuração e aumentar 2 linhas o tamanho máximo que um método pode ter. Pessoalmente eu acho 10 pouco demais.
-- O seed já vem com um admin pré-criado. Para utilizá-lo, basta usar o seguinte email e senha:
+- Adicionei algumas mudanças no rubocop que achei conveniente como ignorar alguns arquivos de configuração e aumentar 2 linhas o tamanho máximo que um método pode ter. Pessoalmente eu acho 10 muito pouco.
+- O seed já vem com um admin e os roles pré-criados. Para utilizá-lo, basta usar o seguinte email e senha:
   - admin@mail.com
   - 123456
 
