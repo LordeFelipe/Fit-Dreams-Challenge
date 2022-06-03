@@ -10,7 +10,16 @@ Desafio proposto pela empresa Switch Dreams em seu desafio backend.
 - Testes Automatizados: Rspec
 - Linter: Rubocop
 - Modelagem do Banco de Dados: https://dbdiagram.io/d/629684c854ce26352736a5b9
-- Link do Deploy no Heroku:
+- Link do Deploy no Heroku: https://ancient-harbor-34285.herokuapp.com/
+
+## Execução do Projeto Localmente
+- Iniciando o banco de dados
+  - rails:db create
+  - rails:db migrate
+  - rails:db seed
+- Ligando o servidor na porta padrão (3000)
+  - bundle install
+  - rails s
 
 ## Rotas
 
