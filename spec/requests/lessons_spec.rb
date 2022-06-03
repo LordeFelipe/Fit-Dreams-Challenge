@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Lessons', type: :request do
+  let!(:admin) { create(:admin) }
+  let(:admin_headers) do
+    { 'X-User-Email': admin.email, 'X-User-Token': admin.authentication_token }
+  end
+
   describe 'Get all lessons (GET /lesson)' do
     let!(:lessons) { create_list(:lesson, 10) }
 
@@ -63,13 +68,13 @@ RSpec.describe 'Lessons', type: :request do
   describe 'Create one lesson (POST /lesson/create)' do
     let!(:category) { create(:category) }
 
-    context 'when the parameters are valid' do
+    context 'when the parameters are valid and the admin is logged in' do
       let(:lesson_params) do
         { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
       end
 
       before do
-        post '/lesson/create', params: lesson_params
+        post '/lesson/create', params: lesson_params, headers: admin_headers
       end
 
       it 'returns created status' do
@@ -97,11 +102,22 @@ RSpec.describe 'Lessons', type: :request do
       end
     end
 
+    context 'when an admin is not logged in' do
+      let(:lesson_params) do
+        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
+      end
+
+      it 'returns status forbidden' do
+        post '/lesson/create', params: lesson_params
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
     context 'when the name is empty' do
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: '', description: 'Teste.', duration: '01:00', start_time: '13:50',
-                       category_id: category.id }
+                       category_id: category.id }, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -109,7 +125,7 @@ RSpec.describe 'Lessons', type: :request do
     context 'when the description is empty' do
       it 'returns bad request status' do
         post '/lesson/create',
-             params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id }
+             params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id }, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -118,7 +134,7 @@ RSpec.describe 'Lessons', type: :request do
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '', start_time: '13:50',
-                       category_id: category.id }
+                       category_id: category.id }, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -127,7 +143,7 @@ RSpec.describe 'Lessons', type: :request do
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '',
-                       category_id: category.id }
+                       category_id: category.id }, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -135,23 +151,23 @@ RSpec.describe 'Lessons', type: :request do
     context 'when the category is empty' do
       it 'returns bad request status' do
         post '/lesson/create',
-             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00', category_id: '' }
+             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00', category_id: '' }, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
   end
 
   describe 'Update one lesson (PATCH /lesson/update/:id)' do
-    context 'when the lesson exists' do
-      let!(:category) { create(:category) }
-      let!(:lesson) { create(:lesson) }
-
-      let(:lesson_params) do
-        { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
-      end
-
+    let!(:lesson) { create(:lesson) }
+    let!(:category) { create(:category) }
+    let(:lesson_params) do
+      { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
+    end
+    
+    context 'when the lesson exists and the admin is logged in' do
+      
       before do
-        patch "/lesson/update/#{lesson.id}", params: lesson_params
+        patch "/lesson/update/#{lesson.id}", params: lesson_params, headers: admin_headers
       end
 
       it 'returns created status' do
@@ -179,35 +195,41 @@ RSpec.describe 'Lessons', type: :request do
       end
     end
 
-    context 'when the lesson does not exist' do
-      let!(:lesson) { create(:lesson) }
-
-      let(:lesson_params) do
-        { name: 'Teste', description: 'Uma bela categoria.' }
+    context 'when an admin is not logged in' do
+      it 'returns status forbidden' do
+        patch "/lesson/update/#{lesson.id}", params: lesson_params
+        expect(response).to have_http_status(:forbidden)
       end
+    end
+
+    context 'when the lesson does not exist' do
 
       it 'returns bad request status' do
-        patch "/lesson/update/#{lesson.id + 1}", params: lesson_params
+        patch "/lesson/update/#{lesson.id + 1}", params: lesson_params, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
   end
 
   describe 'Delete one lesson (DELETE /lesson/delete/:id)' do
-    context 'when the lesson exists' do
-      let!(:lesson) { create(:lesson) }
-
+    let!(:lesson) { create(:lesson) }
+    context 'when the lesson exists and the admin is logged in' do
       it 'returns ok status' do
-        delete "/lesson/delete/#{lesson.id}"
+        delete "/lesson/delete/#{lesson.id}", headers: admin_headers
         expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'when the lesson does not exist' do
-      let!(:lesson) { create(:lesson) }
+    context 'when an admin is not logged in' do
+      it 'returns status forbidden' do
+        delete "/lesson/delete/#{lesson.id}"
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
 
+    context 'when the lesson does not exist' do
       it 'returns bad request status' do
-        delete "/lesson/delete/#{lesson.id + 1}"
+        delete "/lesson/delete/#{lesson.id + 1}", headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
