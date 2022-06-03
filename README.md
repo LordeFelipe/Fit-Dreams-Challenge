@@ -12,6 +12,40 @@ Desafio proposto pela empresa Switch Dreams em seu desafio backend.
 - Modelagem do Banco de Dados: https://dbdiagram.io/d/629684c854ce26352736a5b9
 - Link do Deploy no Heroku:
 
+## Rotas
+
+### Category
+- get '/category'
+- get '/category/show/:id'
+- post '/category/create'
+  - Necessário logar como professor ou admin  
+- patch '/category/update/:id'
+  - Necessário logar como professor ou admin  
+- delete '/category/delete/:id'
+  - Necessário logar como professor ou admin 
+
+### Lesson
+- get '/lesson'
+- get '/lesson/show/:id'
+- post '/lesson/create'
+  - Necessário logar como professor ou admin  
+- patch '/lesson/update/:id'
+  - Necessário logar como professor ou admin  
+- delete '/lesson/delete/:id'
+  - Necessário logar como professor ou admin  
+
+### User
+- post '/signup'
+- post '/login'
+- get '/logout'
+  - Necessário estar logar
+- post '/change_role'
+  - Necessário logar como admin  
+- post '/enroll'
+  - Necessário estar logado
+- post '/unenroll'
+  - Necessário estar logado
+
 ## Observações
 - Para acessar métodos que necessitam de um usuário logado (aluno, professor ou admin), é necessário enviar ho header da requisição o token do usuário (X-User-Token) e o email do usuário (X-User-Email). O token pode ser obtido no método de login. Para mais informações, consulte os testes de requisição do usuário.
 - O método de logout exclui o token do usuário o que força a criação de um novo token quando o usuário loga novamente. Caso a API seja utilizada com algum front, seria equivalente a deslogar de todos os despositivos.
