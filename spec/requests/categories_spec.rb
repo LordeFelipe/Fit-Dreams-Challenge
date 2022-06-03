@@ -56,7 +56,7 @@ RSpec.describe 'Categories', type: :request do
   end
 
   describe 'Create one category (POST /category/create)' do
-    context 'when the parameters are valid and the admin is logged in' do
+    context 'when the parameters are valid and an admin is logged in' do
       let(:category_params) do
         { name: 'Teste', description: 'Uma bela categoria.' }
       end
@@ -105,18 +105,18 @@ RSpec.describe 'Categories', type: :request do
   end
 
   describe 'Update one category (PATCH /category/update/:id)' do
+    let!(:category) { create(:category) }
+
+    let(:category_params) do
+      { name: 'Teste', description: 'Uma bela categoria.' }
+    end
+
     context 'when the category exists and the admin is logged in' do
-      let!(:category) { create(:category) }
-
-      let(:category_params) do
-        { name: 'Teste', description: 'Uma bela categoria.' }
-      end
-
       before do
         patch "/category/update/#{category.id}", params: category_params, headers: admin_headers
       end
 
-      it 'returns created status' do
+      it 'returns ok status' do
         expect(response).to have_http_status(:ok)
       end
 
@@ -130,11 +130,6 @@ RSpec.describe 'Categories', type: :request do
     end
 
     context 'when an admin is not logged in' do
-      let!(:category) { create(:category) }
-      let(:category_params) do
-        { name: 'Teste', description: 'Uma bela categoria.' }
-      end
-
       it 'returns status forbidden' do
         patch "/category/update/#{category.id}", params: category_params
         expect(response).to have_http_status(:forbidden)
@@ -142,12 +137,6 @@ RSpec.describe 'Categories', type: :request do
     end
 
     context 'when the category does not exist' do
-      let!(:category) { create(:category) }
-
-      let(:category_params) do
-        { name: 'Teste', description: 'Uma bela categoria.' }
-      end
-
       it 'returns bad request status' do
         patch "/category/update/#{category.id + 1}", params: category_params, headers: admin_headers
         expect(response).to have_http_status(:bad_request)

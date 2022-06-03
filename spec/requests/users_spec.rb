@@ -355,7 +355,7 @@ RSpec.describe 'Users', type: :request do
         expect(response).to have_http_status(:bad_request)
       end
 
-      it 'enrolls the user in the leson only one time' do
+      it 'enrolls the user in the lesson only one time' do
         expect(user.lessons.length).to eq(1)
       end
     end
@@ -393,7 +393,7 @@ RSpec.describe 'Users', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'enrolls the user in the class' do
+      it 'unenrolls the user on the class' do
         expect(JSON.parse(response.body)['lessons']).to be_empty
       end
     end

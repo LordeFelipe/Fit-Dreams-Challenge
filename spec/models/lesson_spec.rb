@@ -20,6 +20,10 @@ RSpec.describe Lesson, type: :model do
       it { expect(build(:lesson, start_time: '')).to be_invalid }
     end
 
+    context 'when it start_time is invalid' do
+      it { expect(build(:lesson, start_time: '25:69')).to be_invalid }
+    end
+
     context 'when it doesnt have a duration' do
       it { expect(build(:lesson, duration: '')).to be_invalid }
     end
