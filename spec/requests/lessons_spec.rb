@@ -125,7 +125,9 @@ RSpec.describe 'Lessons', type: :request do
     context 'when the description is empty' do
       it 'returns bad request status' do
         post '/lesson/create',
-             params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50', category_id: category.id }, headers: admin_headers
+             params: { name: 'Nome', description: '', duration: '01:00', start_time: '13:50',
+                       category_id: category.id },
+             headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -134,7 +136,8 @@ RSpec.describe 'Lessons', type: :request do
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '', start_time: '13:50',
-                       category_id: category.id }, headers: admin_headers
+                       category_id: category.id },
+             headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -143,7 +146,8 @@ RSpec.describe 'Lessons', type: :request do
       it 'returns bad request status' do
         post '/lesson/create',
              params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '',
-                       category_id: category.id }, headers: admin_headers
+                       category_id: category.id },
+             headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -151,7 +155,9 @@ RSpec.describe 'Lessons', type: :request do
     context 'when the category is empty' do
       it 'returns bad request status' do
         post '/lesson/create',
-             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00', category_id: '' }, headers: admin_headers
+             params: { name: 'Nome', description: 'Descrição', duration: '10:00', start_time: '22:00',
+                       category_id: '' },
+             headers: admin_headers
         expect(response).to have_http_status(:bad_request)
       end
     end
@@ -163,9 +169,8 @@ RSpec.describe 'Lessons', type: :request do
     let(:lesson_params) do
       { name: 'Teste', description: 'Teste.', duration: '01:00', start_time: '13:50', category_id: category.id }
     end
-    
+
     context 'when the lesson exists and the admin is logged in' do
-      
       before do
         patch "/lesson/update/#{lesson.id}", params: lesson_params, headers: admin_headers
       end
@@ -203,7 +208,6 @@ RSpec.describe 'Lessons', type: :request do
     end
 
     context 'when the lesson does not exist' do
-
       it 'returns bad request status' do
         patch "/lesson/update/#{lesson.id + 1}", params: lesson_params, headers: admin_headers
         expect(response).to have_http_status(:bad_request)
@@ -213,6 +217,7 @@ RSpec.describe 'Lessons', type: :request do
 
   describe 'Delete one lesson (DELETE /lesson/delete/:id)' do
     let!(:lesson) { create(:lesson) }
+
     context 'when the lesson exists and the admin is logged in' do
       it 'returns ok status' do
         delete "/lesson/delete/#{lesson.id}", headers: admin_headers
